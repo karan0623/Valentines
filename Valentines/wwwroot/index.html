@@ -1,0 +1,209 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Be My Valentine</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff5f7;
+            font-family: Arial, sans-serif;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 80px;
+            border-radius: 30px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            text-align: center;
+            width: 900px;
+            height: 650px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-top: 30px;
+            width: 100%;
+        }
+
+        #yesBtn {
+            background-color: #ff85a2;
+            color: white;
+            font-size: 20px;
+            padding: 14px 30px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #noBtn {
+            background-color: #cccccc;
+            font-size: 20px;
+            padding: 14px 30px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #celebrationGif {
+            width: 300px;
+            margin-top: 30px;
+        }
+
+        h2 {
+            font-size: 32px;
+        }
+
+        /* Heart rain styles */
+        .heart-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
+            animation: fall linear forwards;
+        }
+
+        @@keyframes fall {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(700px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-wrapper">
+
+        <div class="card">
+
+            <h2>Will you be my Valentine? 💖</h2>
+
+            <div class="button-row">
+                <button id="yesBtn">Yes 😊</button>
+                <button id="noBtn">No 😢</button>
+            </div>
+
+            <!-- Heart container for animated hearts -->
+            <div class="heart-container"></div>
+
+            <!-- Celebration GIF -->
+            <img id="celebrationGif"
+                 src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjJhYWFuYzcxNGdpNWVmMnVoa2dscHo0OGR1ZTJ5NzF0Ynl3dnpwZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/OfkGZ5H2H3f8Y/giphy.gif"
+                 style="display:none;" />
+
+        </div>
+
+    </div>
+
+    <script>
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+
+        let isMoving = false;
+
+        // No button dodging
+        noBtn.addEventListener("mouseover", function () {
+            if (!isMoving) {
+                const rect = noBtn.getBoundingClientRect();
+                noBtn.style.position = "fixed";
+                noBtn.style.left = rect.left + "px";
+                noBtn.style.top = rect.top + "px";
+                isMoving = true;
+            }
+
+            const margin = 30;
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            const maxX = window.innerWidth - btnWidth - margin;
+            const maxY = window.innerHeight - btnHeight - margin;
+
+            const minX = margin;
+            const minY = margin;
+
+            const x = Math.random() * (maxX - minX) + minX;
+            const y = Math.random() * (maxY - minY) + minY;
+
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        });
+
+        // Yes button click
+        yesBtn.addEventListener("click", function() {
+            document.querySelector(".button-row").style.display = "none";
+
+            const gif = document.getElementById("celebrationGif");
+            gif.style.display = "block";
+
+            const card = document.querySelector(".card");
+            const yayText = document.createElement("h2");
+            yayText.textContent = "YAY! 🎉💖";
+            yayText.style.fontSize = "40px";
+            yayText.style.color = "#ff4d6d";
+            yayText.style.marginBottom = "20px";
+            card.insertBefore(yayText, gif);
+
+            const heartContainer = document.querySelector(".heart-container");
+
+            // Function to create a heart
+            function createHeart() {
+                const heart = document.createElement("div");
+                heart.classList.add("heart");
+                heart.innerHTML = "❤️";
+                heart.style.left = Math.random() * 90 + "%";
+                heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+                heart.style.fontSize = 15 + Math.random() * 25 + "px";
+                heartContainer.appendChild(heart);
+                heart.addEventListener("animationend", () => heart.remove());
+            }
+
+            // Repeat hearts every 200ms
+            const heartInterval = setInterval(createHeart, 200);
+
+            // Stop after 10 seconds
+            setTimeout(() => clearInterval(heartInterval), 10000);
+        });
+    </script>
+
+</body>
+</html>
